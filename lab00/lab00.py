@@ -5,4 +5,4 @@ def twenty_twenty_one():
     >>> twenty_twenty_one()
     2021
     """
-    return ______
+    return 2021 # the most creative expression is no creation
