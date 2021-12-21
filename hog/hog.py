@@ -1,4 +1,3 @@
-"""CS 61A Presents The Game of Hog."""
 
 from dice import six_sided, four_sided, make_test_dice
 from ucb import main, trace, interact
@@ -21,7 +20,14 @@ def roll_dice(num_rolls, dice=six_sided):
     assert type(num_rolls) == int, 'num_rolls must be an integer.'
     assert num_rolls > 0, 'Must roll at least once.'
     # BEGIN PROBLEM 1
-    "*** YOUR CODE HERE ***"
+    sum=0
+    flag=0
+    for i in range(num_rolls):
+        x=dice()
+        sum=sum+x
+        if x == 1:
+            flag = 1
+    return 1 if flag else sum
     # END PROBLEM 1
 
 
@@ -31,7 +37,10 @@ def picky_piggy(score):
     score:  The opponent's current score.
     """
     # BEGIN PROBLEM 2
-    "*** YOUR CODE HERE ***"
+    tmp = 1.0/7
+    if score == 0:
+        return 7
+    return int(10**((score-1) % 6 +1)*tmp)%10
     # END PROBLEM 2
 
 
@@ -51,7 +60,10 @@ def take_turn(num_rolls, opponent_score, dice=six_sided, goal=GOAL_SCORE):
     assert num_rolls <= 10, 'Cannot roll more than 10 dice.'
     assert opponent_score < goal, 'The game should be over.'
     # BEGIN PROBLEM 3
-    "*** YOUR CODE HERE ***"
+    if num_rolls == 0:
+        return picky_piggy(opponent_score)
+    return roll_dice(num_rolls,dice)
+
     # END PROBLEM 3
 
 
@@ -62,7 +74,9 @@ def hog_pile(player_score, opponent_score):
     opponent_score: The total score of the other player.
     """
     # BEGIN PROBLEM 4
-    "*** YOUR CODE HERE ***"
+    if player_score == opponent_score:
+        return player_score
+    return 0
     # END PROBLEM 4
 
 
@@ -101,11 +115,20 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     """
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+    while 1:
+        if score0 >=goal or score1 >= goal:
+            break
+        getscore = take_turn(strategy0(score0,score1) if who==0 else strategy1(score1,score0),score1 if who==0 else score0,dice,goal)
+        if who==0:
+            score0 = score0 + getscore
+            score0 = score0 + hog_pile(score0,score1)
+        else:
+            score1 = score1 + getscore
+            score1 = score1 + hog_pile(score1,score0)
+        who=next_player(who)
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 6
-    "*** YOUR CODE HERE ***"
     # END PROBLEM 6
     return score0, score1
 
