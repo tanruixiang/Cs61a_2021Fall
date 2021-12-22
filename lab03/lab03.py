@@ -25,7 +25,12 @@ def unique_digits(n):
     >>> unique_digits(10) # 0 and 1
     2
     """
-    "*** YOUR CODE HERE ***"
+    cnt=0
+    for i in range(10):
+        cnt=cnt+has_digit(n,i)
+    return cnt
+
+
 
 
 def has_digit(n, k):
@@ -35,9 +40,11 @@ def has_digit(n, k):
     >>> has_digit(12, 7)
     False
     """
-    "*** YOUR CODE HERE ***"
-
-
+    while n:
+        if n%10==k:
+            return True
+        n//=10
+    return False
 def ordered_digits(x):
     """Return True if the (base 10) digits of X>0 are in non-decreasing
     order, and False otherwise.
@@ -57,8 +64,13 @@ def ordered_digits(x):
     False
 
     """
-    "*** YOUR CODE HERE ***"
-
+    last=11
+    while x:
+        if x%10>last:
+            return False
+        last=x%10
+        x//=10
+    return True
 
 def get_k_run_starter(n, k):
     """
@@ -81,12 +93,13 @@ def get_k_run_starter(n, k):
     """
     i = 0
     final = None
-    while ____________________________:
-        while ____________________________:
-            ____________________________
-        final = ____________________________
-        i = ____________________________
-        n = ____________________________
+    # 这一段看了一眼答案，写之前不太能理解他的填空设计。。。
+    while i <= k:
+        while n>10 and n % 10>(n//10)%10:
+            n = n//10
+        final = n % 10
+        i = i+1
+        n = n//10
     return final
 
 
@@ -105,7 +118,11 @@ def make_repeater(func, n):
     >>> make_repeater(square, 0)(5) # Yes, it makes sense to apply the function zero times!
     5
     """
-    "*** YOUR CODE HERE ***"
+    def f(x):
+        for i in range(n):
+            x=func(x)
+        return x
+    return f
 
 
 def composer(func1, func2):
@@ -123,7 +140,8 @@ def apply_twice(func):
     >>> apply_twice(square)(2)
     16
     """
-    "*** YOUR CODE HERE ***"
+    return lambda x:func(func(x))
+
 
 
 def protected_secret(password, secret, num_attempts):
@@ -145,5 +163,13 @@ def protected_secret(password, secret, num_attempts):
     SECRET LOCKED
     """
     def get_secret(password_attempt):
-        "*** YOUR CODE HERE ***"
+        if num_attempts <=0 :
+            print("SECRET LOCKED")
+            return  protected_secret(password,secret,num_attempts-1)
+        if password == password_attempt:
+            print(secret)
+            return protected_secret(password,secret,num_attempts)
+        print('INCORRECT PASSWORD')
+        return protected_secret(password,secret,num_attempts-1)
+
     return get_secret
