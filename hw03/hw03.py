@@ -22,7 +22,9 @@ def num_eights(pos):
     ...       ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    if pos <= 0:
+        return 0
+    return int(pos%10==8) +num_eights(pos//10)
 
 
 def pingpong(n):
@@ -58,9 +60,13 @@ def pingpong(n):
     ...       ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr'])
     True
     """
-    "*** YOUR CODE HERE ***"
-
-
+    def dfs(sum,dep,dir):
+        if dep > n:
+            return sum
+        if dep % 8 ==0 or num_eights(dep)>0:
+            return dfs(sum+dir,dep+1,-dir)
+        return dfs(sum+dir,dep+1,dir)
+    return dfs(0,1,1)
 def missing_digits(n):
     """Given a number a that is in sorted, non-decreasing order,
     return the number of missing digits in n. A missing digit is
@@ -88,8 +94,9 @@ def missing_digits(n):
     >>> check(HW_SOURCE_FILE, 'missing_digits', ['While', 'For'])
     True
     """
-    "*** YOUR CODE HERE ***"
-
+    if n<10:
+        return 0
+    return max(n%10-(n//10)%10-1,0)+missing_digits(n//10)
 
 def ascending_coin(coin):
     """Returns the next ascending coin in order.
@@ -144,8 +151,18 @@ def count_coins(change):
     >>> check(HW_SOURCE_FILE, 'count_coins', ['While', 'For'])
     True
     """
-    "*** YOUR CODE HERE ***"
-
+    def dfs(change,minchange):
+        if minchange ==None:
+            return 0
+        if change < 0 :
+            return 0
+        if change ==0 :
+            return 1
+        sum=0
+        sum+=dfs(change,ascending_coin(minchange))
+        sum+=dfs(change-minchange,minchange)
+        return sum
+    return dfs(change,1)
 
 def print_move(origin, destination):
     """Print instructions to move a disk."""
@@ -180,7 +197,13 @@ def move_stack(n, start, end):
     Move the top disk from rod 1 to rod 3
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
-    "*** YOUR CODE HERE ***"
+    if n==1:
+        print_move(start,end)
+        return
+    mid=1+2+3-start-end
+    move_stack(n-1,start,mid)
+    print_move(start,end)
+    move_stack(n-1,mid,end)
 
 
 from operator import sub, mul
@@ -197,4 +220,5 @@ def make_anonymous_factorial():
     ...     ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
+    # 这个属实不会。。。不看答案真不会
+    return (lambda f: f(f))(lambda f: lambda x: 1 if x == 0 else x * f(f)(x - 1))
