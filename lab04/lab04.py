@@ -19,7 +19,9 @@ def summation(n, term):
     True
     """
     assert n >= 1
-    "*** YOUR CODE HERE ***"
+    if n ==1 :
+        return term(1)
+    return term(n)+summation(n-1,term)
 
 
 def pascal(row, column):
@@ -35,6 +37,13 @@ def pascal(row, column):
     6
     """
     "*** YOUR CODE HERE ***"
+    if column<0:
+        return 0
+    if column>row:
+        return 0
+    if row <=1:
+        return 1
+    return pascal(row-1,column)+pascal(row-1,column-1)
 
 
 def paths(m, n):
@@ -50,8 +59,16 @@ def paths(m, n):
     >>> paths(1, 157)
     1
     """
-    "*** YOUR CODE HERE ***"
-
+    def dfs(x,y):
+        if x>m or y>n:
+            return 0
+        if x==m and y==n:
+            return 1
+        sum=0
+        sum+=dfs(x+1,y)
+        sum+=dfs(x,y+1)
+        return sum
+    return dfs(1,1)
 
 def couple(s, t):
     """Return a list of two-element lists in which the i-th element is [s[i], t[i]].
@@ -66,7 +83,11 @@ def couple(s, t):
     [['c', 's'], [6, '1']]
     """
     assert len(s) == len(t)
-    "*** YOUR CODE HERE ***"
+    ans=[]
+    for i in range(len(s)):
+        ans.append([s[i],t[i]])
+
+    return ans
 
 
 def coords(fn, seq, lower, upper):
@@ -76,8 +97,7 @@ def coords(fn, seq, lower, upper):
     >>> coords(fn, seq, 1, 9)
     [[-2, 4], [1, 1], [3, 9]]
     """
-    "*** YOUR CODE HERE ***"
-    return ______
+    return [[i,fn(i)] for i in seq if fn(i)>=lower and fn(i)<=upper]
 
 
 def riffle(deck):
@@ -90,4 +110,4 @@ def riffle(deck):
     [0, 10, 1, 11, 2, 12, 3, 13, 4, 14, 5, 15, 6, 16, 7, 17, 8, 18, 9, 19]
     """
     "*** YOUR CODE HERE ***"
-    return _______
+    return [deck[i//2] if i%2==0 else deck[len(deck)//2+(i//2)] for i in range(len(deck)) ]

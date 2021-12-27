@@ -17,23 +17,19 @@ test = {
           ...   return mantle
           >>> drill = crust
           >>> drill = drill()
-          cb9c2df3a4cb7a5551c73372025903f1
-          # locked
+          70km
           >>> drill = drill()
-          fec7434f7090fafe15bc6dec9bf46bf1
-          # locked
+          2900km
           >>> drill = drill()
-          fcce62b963fdb83e20f9b0a5de62abdc
-          fec7434f7090fafe15bc6dec9bf46bf1
-          # locked
+          5300km
+          2900km
           >>> drill()
-          fcce62b963fdb83e20f9b0a5de62abdc
-          fec7434f7090fafe15bc6dec9bf46bf1
-          659ff188e141211878c9838e1df2c80e
-          # locked
+          5300km
+          2900km
+          Function
           """,
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'multiline': False
         }
       ],
