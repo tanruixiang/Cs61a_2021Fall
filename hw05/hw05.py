@@ -20,7 +20,16 @@ def gen_perms(seq):
     >>> sorted(gen_perms("ab"))
     [['a', 'b'], ['b', 'a']]
     """
-    "*** YOUR CODE HERE ***"
+    # 这里不用字典序。。。
+    try:
+        if len(seq) == 1:
+            yield seq
+            return seq
+        for child in gen_perms(list(seq[1:])):
+            for index in range(len(seq)):
+                yield child[:index]+[seq[0]]+child[index:]
+    except StopIteration:
+        print('No more permutations!')
 
 
 def path_yielder(t, value):
@@ -57,10 +66,11 @@ def path_yielder(t, value):
     >>> sorted(list(path_to_2))
     [[0, 2], [0, 2, 1, 2]]
     """
-    "*** YOUR CODE HERE ***"
-    for _______________ in _________________:
-        for _______________ in _________________:
-            "*** YOUR CODE HERE ***"
+    if label(t)==value:
+        yield [value]
+    for child in branches(t):
+        for path in path_yielder(child,value):
+            yield [label(t)]+path
 
 
 def preorder(t):
@@ -73,7 +83,12 @@ def preorder(t):
     >>> preorder(tree(2, [tree(4, [tree(6)])]))
     [2, 4, 6]
     """
-    "*** YOUR CODE HERE ***"
+    if len(branches(t))==0:
+        return [label(t)]
+    tmp=[]
+    for child in branches(t):
+        tmp+=preorder(child)
+    return [label(t)]+tmp
 
 
 def generate_preorder(t):
@@ -87,7 +102,13 @@ def generate_preorder(t):
     >>> list(gen)
     [2, 3, 4, 5, 6, 7]
     """
-    "*** YOUR CODE HERE ***"
+    yield label(t)
+    for child in branches(t):
+        # 这里一定要yield 要在这个调用函数中显示使用yeild 不能直接递归
+        # generate_preorder()是一个生成器 所以使用next遍历才能得到generate_preorder(child)中的yield值
+        for item in generate_preorder(child):
+            yield item
+
 
 
 def remainders_generator(m):
@@ -121,8 +142,15 @@ def remainders_generator(m):
     7
     11
     """
-    "*** YOUR CODE HERE ***"
-
+    for i in range(m):
+        def f():
+            cnt=0
+            if i==0:
+                cnt+=1
+            while True:
+                yield i+cnt*m
+                cnt+=1
+        yield f()
 
 class Tree:
     """
