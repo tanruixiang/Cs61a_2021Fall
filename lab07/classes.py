@@ -23,8 +23,9 @@ class Card:
         >>> other_staff.defense
         500
         """
-        "*** YOUR CODE HERE ***"
-
+        self.name=name
+        self.attack=attack
+        self.defense=defense
     def power(self, opponent_card):
         """
         Calculate power as:
@@ -41,8 +42,7 @@ class Card:
         >>> third_card.power(staff_member)
         50.0
         """
-        "*** YOUR CODE HERE ***"
-
+        return self.attack-opponent_card.defense/2
     def effect(self, opponent_card, player, opponent):
         """
         Cards have no default effect.
@@ -79,7 +79,8 @@ class Player:
         """
         self.deck = deck
         self.name = name
-        "*** YOUR CODE HERE ***"
+        self.hand = deck.cards[:5]
+        self.deck.cards = self.deck.cards[5:]
 
     def draw(self):
         """Draw a card from the player's deck and add it to their hand.
@@ -93,7 +94,8 @@ class Player:
         6
         """
         assert not self.deck.is_empty(), 'Deck is empty!'
-        "*** YOUR CODE HERE ***"
+        self.hand+=self.deck.cards[:1]
+        self.deck.cards=self.deck.cards[1:]
 
     def play(self, card_index):
         """Remove and return a card from the player's hand at the given index.
@@ -109,8 +111,9 @@ class Player:
         >>> len(test_player.hand)
         2
         """
-        "*** YOUR CODE HERE ***"
-
+        tmp=self.hand[card_index]
+        self.hand=self.hand[:card_index]+self.hand[card_index+1:]
+        return tmp
     def display_hand(self):
         """
         Display the player's current hand to the user.
