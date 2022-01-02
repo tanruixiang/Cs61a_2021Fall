@@ -35,8 +35,32 @@ class VendingMachine:
     >>> w.vend()
     'Here is your soda.'
     """
-    "*** YOUR CODE HERE ***"
-
+    def __init__(self,name,price):
+        self.name=name
+        self.price=price
+        self.num=0
+        self.money=0
+    def vend(self):
+        if self.num == 0:
+            return 'Nothing left to vend. Please restock.'
+        if self.money<self.price:
+            return f'You must add ${self.price-self.money} more funds.'
+        self.num-=1
+        if self.money==self.price:
+            self.money-=self.price
+            return f'Here is your {self.name}.'
+        self.money -= self.price
+        message=f'Here is your {self.name} and ${self.money} change.'
+        self.money=0
+        return message
+    def add_funds(self,money):
+        if self.num ==0 :
+            return f'Nothing left to vend. Please restock. Here is your ${money}.'
+        self.money+=money
+        return f'Current balance: ${self.money}'
+    def restock(self,num):
+        self.num+=num
+        return f'Current {self.name} stock: {self.num}'
 
 class Mint:
     """A mint creates coins by stamping on years.
@@ -73,10 +97,9 @@ class Mint:
         self.update()
 
     def create(self, kind):
-        "*** YOUR CODE HERE ***"
-
+        return kind(self.year)
     def update(self):
-        "*** YOUR CODE HERE ***"
+        self.year=Mint.present_year
 
 
 class Coin:
@@ -84,8 +107,7 @@ class Coin:
         self.year = year
 
     def worth(self):
-        "*** YOUR CODE HERE ***"
-
+        return self.cents+max(0,Mint.present_year - self.year - 50)
 
 class Nickel(Coin):
     cents = 5
@@ -111,7 +133,15 @@ def store_digits(n):
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     >>> link1 = Link(3, Link(Link(4), Link(5, Link(6))))
     """
-    "*** YOUR CODE HERE ***"
+    def digit(x):
+        cnt=0
+        while x>0:
+            cnt+=1
+            x//=10
+        return cnt
+    if digit(n)==1:
+        return Link(n)
+    return Link(n//(10**(digit(n)-1)),store_digits(n%(10**(digit(n)-1))))
 
 
 def deep_map_mut(fn, link):
@@ -131,7 +161,15 @@ def deep_map_mut(fn, link):
     >>> print(link1)
     <9 <16> 25 36>
     """
-    "*** YOUR CODE HERE ***"
+    if link == Link.empty:
+        return
+    if isinstance(link.first,Link):
+        deep_map_mut(fn,link.first)
+        deep_map_mut(fn,link.rest)
+        return
+    link.first=fn(link.first)
+    deep_map_mut(fn,link.rest)
+
 
 
 def two_list(vals, amounts):
@@ -153,8 +191,14 @@ def two_list(vals, amounts):
     >>> c
     Link(1, Link(1, Link(3, Link(3, Link(2)))))
     """
-    "*** YOUR CODE HERE ***"
-
+    def dfs(vals,amounts,count):
+        if not vals:
+            return Link.empty
+        if count<amounts[0]:
+            return Link(vals[0],dfs(vals,amounts,count+1))
+        if count==amounts[0]:
+            return dfs(vals[1:],amounts[1:],0)
+    return dfs(vals,amounts,0)
 
 class VirFib():
     """A Virahanka Fibonacci number.
@@ -182,7 +226,15 @@ class VirFib():
         self.value = value
 
     def next(self):
-        "*** YOUR CODE HERE ***"
+        if self.value==0:
+            # 一定要从0开始，不然pre不会被初始化
+            x=VirFib(1)
+            x.pre=0
+            return x
+        ans=VirFib(self.value+self.pre)
+        ans.pre=self.value
+        return ans
+
 
     def __repr__(self):
         return "VirFib object, value " + str(self.value)
@@ -213,7 +265,17 @@ def is_bst(t):
     >>> is_bst(t7)
     False
     """
-    "*** YOUR CODE HERE ***"
+    def dfs(t,mi,flag1,mx,flag2):
+        if (flag1==1 and t.label<=mi )or (flag2==1 and t.label> mx):
+            return False
+        if len(t.branches)==1:
+            return dfs(t.branches[0],mi,flag1,t.label,1) or dfs(t.branches[0],t.label,1,mx,flag2)
+        elif len(t.branches)==2:
+            return dfs(t.branches[0],mi,flag1,t.label,1) and dfs(t.branches[1],t.label,1,mx,flag2)
+        elif len(t.branches)>2:
+            return False
+        return True
+    return dfs(t,0,0,0,0)
 
 
 class Link:
