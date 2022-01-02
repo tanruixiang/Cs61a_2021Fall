@@ -7,8 +7,16 @@ def convert_link(link):
     >>> convert_link(Link.empty)
     []
     """
-    "*** YOUR CODE HERE ***"
-
+    '''
+    ans=[]
+    while link != Link.empty:
+        ans.append(link.first)
+        link=link.rest
+    return ans
+    '''
+    if link == Link.empty:
+        return []
+    return [link.first]+convert_link(link.rest)
 
 def label_squarer(t):
     """Mutates a Tree t by squaring all its elements.
@@ -18,8 +26,11 @@ def label_squarer(t):
     >>> t
     Tree(1, [Tree(9, [Tree(25)]), Tree(49)])
     """
-    "*** YOUR CODE HERE ***"
-
+    t.label=t.label*t.label
+    if t.is_leaf():
+        return
+    for i in t.branches:
+        label_squarer(i)
 
 def cumulative_mul(t):
     """Mutates t so that each node's label becomes the product of all labels in
@@ -30,8 +41,14 @@ def cumulative_mul(t):
     >>> t
     Tree(105, [Tree(15, [Tree(5)]), Tree(7)])
     """
-    "*** YOUR CODE HERE ***"
+    def solve(t):
+        if t.is_leaf():
+            return t.label
 
+        for i in t.branches:
+            t.label*=solve(i)
+        return t.label
+    solve(t)
 
 def add_d_leaves(t, v):
     """Add d leaves containing v to each node at every depth d.
@@ -91,7 +108,13 @@ def add_d_leaves(t, v):
           10
         10
     """
-    "*** YOUR CODE HERE ***"
+    def dfs(t,v,dep):
+
+        for i in t.branches:
+            dfs(i,v,dep+1)
+        for i in range(dep):
+            t.branches.append(Tree(v))
+    dfs(t,v,0)
 
 
 def every_other(s):
@@ -111,8 +134,13 @@ def every_other(s):
     >>> singleton
     Link(4)
     """
-    "*** YOUR CODE HERE ***"
-
+    def dfs(s):
+        if s==Link.empty:
+            return Link.empty
+        if s.rest!=Link.empty:
+            s.rest=dfs(s.rest.rest)
+        return s
+    dfs(s)
 
 def prune_small(t, n):
     """Prune the tree mutatively, keeping only the n branches
@@ -131,11 +159,11 @@ def prune_small(t, n):
     >>> t3
     Tree(6, [Tree(1), Tree(3, [Tree(1), Tree(2)])])
     """
-    while ___________________________:
-        largest = max(_______________, key=____________________)
-        _________________________
-    for __ in _____________:
-        ___________________
+    while len(t.branches)>n:
+        largest = max(t.branches, key=lambda x:x.label)
+        t.branches.remove(largest)
+    for i in t.branches:
+        prune_small(i,n)
 
 
 class Link:
